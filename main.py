@@ -49,7 +49,6 @@ class AnnouncementController(object):
 
     def get_all_announcements(self):
         announcements = Announcement.query.order_by(Announcement.date.desc()).all()
-        announcements_json = {}
         announcements_arr = []
 
         for announcement in announcements:
@@ -59,8 +58,7 @@ class AnnouncementController(object):
                 "date": announcement.date.strftime('%d.%m.%y')
             })
 
-        announcements_json['announcements'] = announcements_arr
-        return announcements_json
+        return jsonify(announcements_arr)
 
     def get_announcement_by_id(self, current_id=None):
         if current_id:
