@@ -53,9 +53,10 @@ class AnnouncementController(object):
 
         for announcement in announcements:
             announcements_arr.append({
+                "id": announcement.id,
                 "title": announcement.title,
                 "description": announcement.description,
-                "date": announcement.date.strftime('%d.%m.%y')
+                "date": announcement.date.strftime('%d.%m.%Y')
             })
 
         return jsonify(announcements_arr)
