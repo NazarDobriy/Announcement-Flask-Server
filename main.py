@@ -85,7 +85,7 @@ class AnnouncementController(object):
                 announcement.title = new_announcement_data.get('title')
 
             if new_announcement_data.get('description'):
-                announcement.title = new_announcement_data.get('description')
+                announcement.description = new_announcement_data.get('description')
 
             db.session.commit()
 
