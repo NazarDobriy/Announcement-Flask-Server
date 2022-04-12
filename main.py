@@ -32,10 +32,10 @@ class AnnouncementController(object):
         self.model_announcement.description = announcement_data.get('description')
 
         if not self.model_announcement.title:
-            return make_response(jsonify({"message": "You miss title"}, 400))
+            abort(400, "You miss title")
 
         elif not self.model_announcement.description:
-            return make_response(jsonify({"message": "You miss description"}, 400))
+            abort(400, "You miss description")
 
         else:
             announcement = Announcement(title=self.model_announcement.title, description=self.model_announcement.description)
@@ -44,8 +44,7 @@ class AnnouncementController(object):
                 db.session.commit()
                 return make_response(jsonify({"message": "An announcement was created"}, 200))
             except:
-                return make_response(
-                    jsonify({"message": "An error occurred while adding the announcement in the database"}, 400))
+                abort(400, "An error occurred while adding the announcement in the database")
 
     def get_all_announcements(self):
         announcements = Announcement.query.order_by(Announcement.date.desc()).all()
@@ -66,7 +65,7 @@ class AnnouncementController(object):
             announcement = Announcement.query.get(current_id)
 
             if not announcement:
-                abort(404)
+                abort(404, "Announcement with this id isn't found")
 
             announcement_json = {
                 "title": announcement.title,
@@ -90,7 +89,7 @@ class AnnouncementController(object):
             db.session.commit()
 
             return make_response(jsonify({"message": "An announcement was updated"}, 200))
-        return jsonify({"message": "Announcement with this id is not found"}, 404)
+        abort(404, "Announcement with this id is not found")
 
     def delete(self, current_id=None):
         if current_id:
@@ -99,13 +98,9 @@ class AnnouncementController(object):
                 db.session.delete(selected_announcement)
                 db.session.commit()
             except:
-                return make_response(
-                    jsonify({
-                        "message": "An error occurred while deleting the announcement by id in the database"
-                    }, 400)
-                )
+                abort(400, "An error occurred while deleting the announcement by id in the database")
             return jsonify({"message": "Announcement was deleted"}, 200)
-        return jsonify({"message": "Announcement with this id is not found"}, 404)
+        abort(404, "Announcement with this id is not found")
 
 
 @app.route('/create-announcement', methods=['POST'])
