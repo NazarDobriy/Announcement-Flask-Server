@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_cors import CORS
@@ -63,22 +63,18 @@ class AnnouncementController(object):
 
     def get_announcement_by_id(self, current_id=None):
         if current_id:
-            try:
-                announcement = Announcement.query.get(current_id)
+            announcement = Announcement.query.get(current_id)
 
-                if not announcement:
-                    raise Exception("Don't exist announcement with this id")
+            if not announcement:
+                abort(404)
 
-                announcement_json = {
-                    "title": announcement.title,
-                    "description": announcement.description,
-                    "date": announcement.date.strftime('%d.%m.%y')
-                }
-
-                return announcement_json
-            except Exception as e:
-                return make_response(jsonify({"message": str(e)}, 404))
-        return make_response(jsonify({"message": "Announcement with this id is not found"}, 404))
+            announcement_json = {
+                "title": announcement.title,
+                "description": announcement.description,
+                "date": announcement.date.strftime('%d.%m.%y')
+            }
+            return announcement_json
+        abort(404)
 
     def update(self, current_id=None):
         if current_id:
