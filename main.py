@@ -39,12 +39,9 @@ class AnnouncementController(object):
 
         else:
             announcement = Announcement(title=self.model_announcement.title, description=self.model_announcement.description)
-            try:
-                db.session.add(announcement)
-                db.session.commit()
-                return make_response(jsonify({"message": "An announcement was created"}, 200))
-            except:
-                abort(400, "An error occurred while adding the announcement in the database")
+            db.session.add(announcement)
+            db.session.commit()
+            return make_response(jsonify({"message": "An announcement was created"}, 200))
 
     def get_all_announcements(self):
         announcements = Announcement.query.order_by(Announcement.date.desc()).all()
@@ -94,11 +91,8 @@ class AnnouncementController(object):
     def delete(self, current_id=None):
         if current_id:
             selected_announcement = Announcement.query.get(current_id)
-            try:
-                db.session.delete(selected_announcement)
-                db.session.commit()
-            except:
-                abort(400, "An error occurred while deleting the announcement by id in the database")
+            db.session.delete(selected_announcement)
+            db.session.commit()
             return jsonify({"message": "Announcement was deleted"}, 200)
         abort(404, "Announcement with this id is not found")
 
