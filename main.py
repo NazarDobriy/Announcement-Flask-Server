@@ -1,8 +1,6 @@
 import sqlite3
-from flask import Flask, request, make_response, jsonify, abort
-from datetime import datetime
+from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
-from sqlalchemy.engine import row
 
 app = Flask(__name__)
 CORS(app)
@@ -58,6 +56,9 @@ def announcement(id):
 
     rows = cursor.fetchall()
 
+    if not len(rows):
+        abort(404)
+
     for r in rows:
         announcement['title'] = r[1]
         announcement['description'] = r[2]
@@ -92,6 +93,13 @@ def update_announcement(id):
         "title": announcement["title"],
         "description": announcement["description"]
     }
+
+    cursor = conn.execute("SELECT * FROM announcement ORDER BY date DESC")
+
+    rows = cursor.fetchall()
+
+    if not len(rows):
+        abort(404)
 
     conn.execute(sql, (announcement["title"], announcement["description"], id))
     conn.commit()
