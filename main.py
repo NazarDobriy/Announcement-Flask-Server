@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, make_response, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -8,6 +10,7 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///announcement.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+SQLALCHEMY_DB_URL = os.getenv("DB_CONN")
 
 
 class Announcement(db.Model):
