@@ -38,7 +38,7 @@ def all_announcements():
     announcements = None
 
     conn = db_connection()
-    cursor = conn.execute("SELECT * FROM announcement ORDER BY date")
+    cursor = conn.execute("SELECT * FROM announcement ORDER BY date DESC")
 
     announcements = [
         dict(id=row[0], title=row[1], description=row[2], date=row[3])
